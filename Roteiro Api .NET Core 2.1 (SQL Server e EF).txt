@@ -1,0 +1,2 @@
+Este documento está sendo criado com o objetivo de organização das tarefas para criar uma Api Rest com .NET Core usando SQL Server e o Entity Framework para criação e manipulação do banco de 
+dados.
