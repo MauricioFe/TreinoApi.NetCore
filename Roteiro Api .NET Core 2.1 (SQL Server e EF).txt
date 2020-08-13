@@ -4,6 +4,7 @@ dados. Será criado uma api bem simples com o crud de duas tabelas, as famigerad
 Pré-requisitos para a criação da API: 
 -Conhecimento sobre POO com o C#.
 -Entender o funcionamento de API Rest.
+-linq lambda
 -Saber a linguagem SQL 
 -Conhecer e entender a sintaxe do Entity Framework
 -Ter instalado o Visual Studio 2019 (com o .NET Core) ou Utilizar a exnsão do .NET Core no Visual Studio Code.
@@ -16,4 +17,82 @@ Com o projeto já criado podemos ir para a parte da codificação. Pensando em u
 Primeiro criamos a pasta Models, Data e Repository na raiz do projeto. Dentro da pasta models teremos nossos modelos que serão as classe de categoria e produto passando as propriedades de cada uma
 seguindo o padrão de nome e tipagem de dados iguais ao que está no script de banco de dados. É muito importante que as propriedades tenham os mesmos nomes das colunas definidas no nosso SQL.
 
- 
+O próximo passo é criar dentro da pasta Data uma classe onde iremos persistir todos os nossos objetos e referencia o contexto do nosso modelo de negócio. Um padrão de nomenclatura é colocar a sua regra
+de negócio junto com a palavra reservada "context" ficando assim um exemplo LojaContext. Nosso Loja context tem que fazer três coisas. Primeiro permitir a utilização do entity e para isso 
+devemos fazer ela herdar da classe DbContext. A segunda é indicar quais as classes vão ser persistidas pelo Entity, com isso criamos uma propriedade do tipo DbSet<Objeto> que vai representar o conjuto 
+do objeto a ser persistido e colocamos o mesmo nome da nossa tabela do banco. A terceira coisa que temos que definir é o banco de dados a partir do contexto. A gente faria isso no construtor mas
+vamos deixar ele sem opções e mudar no arquivo startup onde iremos referênciar nossa string de conexão.
+
+obs: Apalavra-chave “base” é usada para acessar os membros da classe base de dentro de uma classe derivada:
+
+Chamar um método na classe base que foi substituído por outro método.
+Especificar qual construtor da classe base deve ser chamado durante a criação de instâncias da classe derivada.
+Um acesso de classe base é permitido apenas um acessador de propriedade de instância, um método de instância ou um construtor.
+
+Após definir as configurações do nosso contexto devemos ir até o arquivo startup para registrar o mesmo. No código usamos o services e chmamos o método AddDbContext<Qual contexto> indicamos o 
+contexto e a partir de uma expressão lambda indicamos nosso provedor de banco de dados que no caso é o SQLServer e passamos nossa string de conexão. E para passar nossa string de conexão eu acessei
+o arquivo appsettings.json e nele colocamos nossa string de conexão. Para acessar esse arquivo Chamamos o Configuration e para passar a strinh de conexão usamos
+o método GetConnectionString("nome da string") ;
+
+Agora no arquivo appsetings.json a gente cria uma sessão chamdo ConnectionStrings e crio um objeto com o nome referênciado no metodo GetConnectionString la no arquivo startup. e o valor dessa chave 
+é a nossa string de conexão.
+
+
+A partir desse momento vamos iniciar com o Padrão Repository usando injeção de dependencias.
+
+O padrão repositório trabalha com camadas que visa a fomentar a organização em camadas que fazem sentido, mas com conexão fraca. Sugiro que dêem uma olhada nesse artigo caso não conheçam esse padrão
+para uma explicação melhor e mais detalhas: https://imasters.com.br/dotnet/o-padrao-repositorio-revisitado-parte-01.
+
+Sobre a injeção de dependencias é um recurso que ajuda a criar aplicações modulares e manter um nível baixo de acoplamento mas com uma coesão maior. Então para cumprir com o objetivo do padrão repositório 
+precisamos fazer a injeção de dependencias. Para informações bem detalhadas recomendo esse artigo incrivel: http://www.macoratti.net/19/04/c_dioc1.htm.
+
+
+Para começar a usar o padrão repositório vamos criar uma interface para categorias onde iremos criar as assinaturas dos métodos para realização do crud. Fazemos a mesma coisa com Produto. Após criar 
+as interfaces vamos criar as classes para implementar nossas interfaces. Vamos começar com categoria que se chamará CategoriaRepository e nele criamos um construtor para fazer a injeção 
+de dependencia do nosso contexto criamos um campo apenas leitura do tipo da LojaContext e nele atribuimos o valor que vai ser passado por parâmetro do construtor que é um objeto do nosso contexto.
+
+Feito isso começamos a implementar os métodos. Utilizando o EF podemos ver a simplicidade para realizar as operações do banco utilizando os métodos do EF. Por isso é necessário conhecer um pouco sobre 
+EF para realizar esses comando de forma que você entenda o que está rolando por traz desse ORM maravilhoso.
+
+Após fazer isso com Categoria fazemos o mesmo processo com os produtos.
+
+
+Com isso podemos criar nossos controllers para criar nossos endPoints. Para criar um controller clicamos com o botão direito na pasta, clicamos em add, controller, Selecionamos Api controller - Empty.
+Declaramos o nome desse controller que vai ser CategoriaController. Primeiro passo é fazer a injeção de dependencia com o repositório, fazemos assim com um campo privado apenas leitura do tipo da nossa 
+interface e no construtor do controller injatamos a dependecia atribuindo o valor do nosso parametro no campo que criamos e a partir dele podemos acessar aos métodos do nosso repositório.
+
+O primeiro método a ser implementado é para buscar todas as categorias que vai ter o tipo IEnumerable<Categoria> e vai retornar nosso método do repositorio da categoria que retorna todos. Para cada
+método devemos informar o verbo HTTP usado.
+
+O próximo método é um get por id nele informamos o paramêtro e passamos um nome para a rota para usarmos ela depois. Esse método é do tipo IActionResult que é uma interface que trabalha com resultados
+de requisições web. chamamos o método que implementamos na interface passando o id por paramentro e retornamos um objeto como resultado se esse objeto for null retornaremos um 404.
+
+
+Seguindo com o crund agora vamos fazer o create e indicamos que nossa rota é um POST nosso método será também do tipo IActionResult, vamos falar que o parâmetro que vamos recerber irá vim do Body da 
+requisição. Verificamos se o objeto é null caso seja retornamos um 400 ou seja badRequest. caso contrário chamamos o método Add passando a categoria por parametro e retornamos o objeto criado a partir 
+do método CreatedAtRoute onde nós chamamos a rota que nomeamos no getById e instanciamos ela com o id gerado nesse create, para que essa rota busque o id criado na nova categoria.
+
+O update nós mandamos na rota o id e recebemos no body os dados da categoria. criamos uma variavel do tipo categoria que recebe o retorno do metodo find do nosso repositório, que vai buscar pelo id
+mandado na url.Enfim verificamos se exite essa categoria caso seja igual a nulo retornamos not Found. Caso contrario dentro dessa variavel do tipo categoria recebemos os valores do objeto categoria
+enviado por parâmetro. Podemos retornar pro usuário a categoria efitada ou retornar uma instancia da classe NoContentResult que tem como valor a resposta 204 queindica que a solicitação foi bem sucedida 
+e o cliente não precisa sair da página atual. 
+
+Por último vem o Delete onde passamos apenas o id da categoria a ser excluido. fazemos da mesma forma que no update onde criamos uma variavel do tipo categoria e atribuimos o valor dela a partir do
+retorno do metodo find do nosso repositório. Verificamos se for null retornamos not found caso contrario chamamos o método pra remover e retornamos 204 explicado anteriormente.
+
+Para finalizar vamos ate nosso arquivo startup e registrar o servico do repositorio. Se não nossa injeção de dependecia não vai funcionar. no codigo chamamos o objeto services e nele usamos o método 
+AddTransiente passando a interface e a classe que o implmente. ficaria assim: services.AddTransient<ICategoriaRepository, CategoriaRepository> esse add transient vai criar uma instancia desses servicos 
+a cada requisição. agora o serviço foi registrado.
+
+
+
+
+
+
+
+
+
+
+
+
+
