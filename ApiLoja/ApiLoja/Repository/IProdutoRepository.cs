@@ -12,6 +12,6 @@ namespace ApiLoja.Repository
         Produto Find(int id);
         void Add(Produto produto);
         void Update(Produto produto);
-        void Delete (int id);
+        void Remove (int id);
     }
 }
