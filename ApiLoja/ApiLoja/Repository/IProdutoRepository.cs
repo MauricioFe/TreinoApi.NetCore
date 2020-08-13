@@ -8,7 +8,7 @@ namespace ApiLoja.Repository
 {
     public interface IProdutoRepository
     {
-        IEnumerable<Produto> GetAll();
+        List<Produto> GetAll();
         Produto Find(int id);
         void Add(Produto produto);
         void Update(Produto produto);

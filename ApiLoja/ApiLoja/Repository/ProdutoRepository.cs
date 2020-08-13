@@ -1,8 +1,10 @@
 ﻿using ApiLoja.Data;
 using ApiLoja.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace ApiLoja.Repository
@@ -22,11 +24,11 @@ namespace ApiLoja.Repository
         }
         public Produto Find(int id)
         {
-            return _context.Produto.FirstOrDefault(p => p.Id == id);
+            return _context.Produto.Include(x => x.Categoria).FirstOrDefault(p => p.Id == id);
         }
-        public IEnumerable<Produto> GetAll()
+        public List<Produto> GetAll()
         {
-            return _context.Produto.ToList(); 
+            return _context.Produto.Include(x => x.Categoria).ToList();
         }
         public void Remove(int id)
         {

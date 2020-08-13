@@ -22,7 +22,7 @@ namespace ApiLoja.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Produto> GetProdutos()
+        public List<Produto> GetProdutos()
         {
             return _repo.GetAll();
         }
