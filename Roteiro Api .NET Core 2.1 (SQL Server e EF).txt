@@ -1,2 +1,19 @@
-Este documento está sendo criado com o objetivo de organização das tarefas para criar uma Api Rest com .NET Core usando SQL Server e o Entity Framework para criação e manipulação do banco de 
-dados.
+Este documento está sendo criado com o objetivo de organização das tarefas para criar uma Api Rest com .NET Core 2.1 usando SQL Server e o Entity Framework para criação e manipulação do banco de 
+dados. Será criado uma api bem simples com o crud de duas tabelas, as famigeradas e muito utilizadas em exemplos: Produto e categorias.
+
+Pré-requisitos para a criação da API: 
+-Conhecimento sobre POO com o C#.
+-Entender o funcionamento de API Rest.
+-Saber a linguagem SQL 
+-Conhecer e entender a sintaxe do Entity Framework
+-Ter instalado o Visual Studio 2019 (com o .NET Core) ou Utilizar a exnsão do .NET Core no Visual Studio Code.
+
+Para iniciar devemos começar com a criação do banco de dados, sendo assim criar um script com as tabelas Categoria e Produto. Após criar o banco de dados devemos criar o projeto no visual Studio
+seguindo os passos das imagens:
+
+
+Com o projeto já criado podemos ir para a parte da codificação. Pensando em uma organização vamos criar algumas pastas no diretório do projeto.
+Primeiro criamos a pasta Models, Data e Repository na raiz do projeto. Dentro da pasta models teremos nossos modelos que serão as classe de categoria e produto passando as propriedades de cada uma
+seguindo o padrão de nome e tipagem de dados iguais ao que está no script de banco de dados. É muito importante que as propriedades tenham os mesmos nomes das colunas definidas no nosso SQL.
+
+ 
