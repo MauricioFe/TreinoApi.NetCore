@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiLoja.Data;
+using ApiLoja.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +29,8 @@ namespace ApiLoja
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<LojaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("conn")));
+            services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+            services.AddTransient<IProdutoRepository, ProdutoRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

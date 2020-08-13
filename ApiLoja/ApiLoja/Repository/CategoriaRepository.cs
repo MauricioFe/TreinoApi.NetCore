@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace ApiLoja.Repository
 {
-    public class CategoriaRepositorio : ICategoriaRepository
+    public class CategoriaRepository : ICategoriaRepository
     {
         private readonly LojaContext _context;
 
-        public CategoriaRepositorio(LojaContext context)
+        public CategoriaRepository(LojaContext context)
         {
             _context = context;
         }
