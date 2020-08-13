@@ -11,7 +11,7 @@ namespace ApiLoja.Repository
         IEnumerable<Categoria> GetAll();
         Categoria Find(int id);
         void Add(Categoria categoria);
-        void Update(int id, Categoria categoria);
+        void Update(Categoria categoria);
         void Remove(int id);
     }
 }

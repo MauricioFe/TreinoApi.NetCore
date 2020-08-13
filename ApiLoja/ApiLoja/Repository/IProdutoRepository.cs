@@ -11,7 +11,7 @@ namespace ApiLoja.Repository
         IEnumerable<Produto> GetAll();
         Produto Find(int id);
         void Add(Produto produto);
-        void Update(int id, Produto produto);
+        void Update(Produto produto);
         void Delete (int id);
     }
 }
