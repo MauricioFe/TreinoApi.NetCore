@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApiLoja.Repository
 {
-    interface ICategoriaRepository
+    public interface ICategoriaRepository
     {
         IEnumerable<Categoria> GetAll();
         Categoria Find(int id);

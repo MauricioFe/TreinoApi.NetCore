@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApiLoja.Repository
 {
-    interface IProdutoRepository
+    public interface IProdutoRepository
     {
         IEnumerable<Produto> GetAll();
         Produto Find(int id);
