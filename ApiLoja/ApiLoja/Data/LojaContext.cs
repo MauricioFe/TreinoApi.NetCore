@@ -11,7 +11,6 @@ namespace ApiLoja.Data
     public class LojaContext : DbContext
     {
         public LojaContext(DbContextOptions<LojaContext> options) : base(options) { }
-
         public DbSet<Categoria> Categoria { get; set; }
         public DbSet<Produto> Produto { get; set; }
     }

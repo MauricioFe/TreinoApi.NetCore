@@ -84,6 +84,8 @@ Para finalizar vamos ate nosso arquivo startup e registrar o servico do reposito
 AddTransiente passando a interface e a classe que o implmente. ficaria assim: services.AddTransient<ICategoriaRepository, CategoriaRepository> esse add transient vai criar uma instancia desses servicos 
 a cada requisição. agora o serviço foi registrado.
 
+Para realizar os testes temos que enviar a requisição no body em formato Json.
+
 
 
 
